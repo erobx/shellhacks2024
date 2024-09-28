@@ -1,5 +1,4 @@
-//const gmaps_key = process.env.GOOGLE_MAPS_API_KEY
-const gmaps_key = "AIzaSyCkFpvGZkP-LK_Iy2_njTxyWFxw75NSn-U"
+const gmaps_key = process.env.GOOGLE_MAPS_API_KEY
 
 // Function to get address from latitude and longitude using Google Maps API
 async function getAddressFromCoordinates(lat, lon) {
