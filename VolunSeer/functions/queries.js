@@ -1,13 +1,5 @@
 import supabase from "./supabaseClient";
 
-export const getUserNames = async () => {
-  const { data, error } = await supabase.from("users").select();
-  if (error) {
-    return [];
-  }
-  return data;
-}
-
 // All data from a single user
 export const getUser = async (userId) => {
   const { user, error } = await supabase.from("users").select("*").eq("id", userId).single()
@@ -16,8 +8,15 @@ export const getUser = async (userId) => {
 }
 
 // Need user events
-export const getUserEvents = async () => {
-
+export const getUserEvents = async (userId) => {
+  const { events, error } = await supabase
+    .from("events")
+    .select("*").eq("user_id", userId)
+  if (error) {
+    console.log("Error returning events:", error)
+    return []
+  }
+  return events
 }
 
 // 
