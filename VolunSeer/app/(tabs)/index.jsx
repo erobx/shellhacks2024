@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
-import { getUserEvents } from '../../functions/userQueries';
+import { getUserEvents } from '../../functions/queries';
 
 export default function HomeScreen() {
   const [isLoading, setLoading] = useState(true);
@@ -15,20 +15,23 @@ export default function HomeScreen() {
   }, [])
 
   useEffect(() => {
+    let isMounted = true
     const fetchUserEvents = async () => {
       if (userId) {
-        setLoading(true);
+        setLoading(true)
         const events = await getUserEvents(userId);
-        console.log("Fetched events:", events)
-        if (Array.isArray(events)) {
-          setUserEvents(events);
-        } else {
-          console.log("Expected array of objects:", events)
+        console.log("Events:", events)
+        if (isMounted) {
+          setUserEvents(events || []);
+          setLoading(false)
         }
-        setLoading(false);
       }
-    };
+    }
     fetchUserEvents();
+
+    return () => {
+      isMounted = false;
+    }
   }, [userId]);
 
   if (isLoading) {
