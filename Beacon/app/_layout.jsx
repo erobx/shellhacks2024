@@ -1,8 +1,20 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
 import Map from "../components/Map";
 import Report from "../components/Report";
+import ReportDetails from "../components/ReportDetails";
 
 const Tab = createBottomTabNavigator()
+const ReportStack = createStackNavigator()
+
+function ReportStackNavigator() {
+  return (
+    <ReportStack.Navigator screenOptions={{ headerShown: false }}>
+      <ReportStack.Screen name="Report" component={Report} />
+      <ReportStack.Screen name="ReportDetails" component={ReportDetails} />
+    </ReportStack.Navigator>
+  );
+}
 
 export default function AppLayout() {
   return (
@@ -39,7 +51,7 @@ export default function AppLayout() {
           fontWeight: 'bold',
         }
       }} />
-      <Tab.Screen name="report" component={Report} options={{
+      <Tab.Screen name="report" component={ReportStackNavigator} options={{
         headerShown: false,
         tabBarLabel: "Report",
         tabBarLabelStyle: {

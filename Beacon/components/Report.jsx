@@ -1,22 +1,44 @@
-import { useEffect, useState } from "react";
-import { Image, View, Text, StyleSheet } from "react-native";
+import { useState } from "react";
+import { View, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+
+import * as ImagePicker from "expo-image-picker";
+import ImageViewer from "./ImageViewer";
+import Button from "./Button";
 
 const PlaceHolderImage = require('../assets/images/VolunSeer.png')
 
 export default function Report() {
-  const [loading, setLoading] = useState(true)
+  const [selectedImage, setSelectedImage] = useState(null)
+  const navigation = useNavigation()
 
-  useEffect(() => {
-  }, [])
+  const pickImageAsync = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setSelectedImage(result.assets[0].uri)
+    }
+  }
+
+  const goToDetails = () => {
+    navigation.navigate("ReportDetails", { imageUri: selectedImage });
+  };
 
   return (
-    <View style={{
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-    }}>
-      <Image source={PlaceHolderImage} style={styles.image} />
-      <Text>Upload event</Text>
+    <View style={styles.container}>
+      <View style={styles.imageContainer}>
+        <ImageViewer
+          placeholderImageSource={PlaceHolderImage}
+          selectedImage={selectedImage}
+        />
+      </View>
+      <View style={styles.footerContainer}>
+        <Button theme="primary" label="Choose a photo" onPress={pickImageAsync} />
+        <Button theme="primary" label="Next" onPress={goToDetails} />
+      </View>
     </View>
   );
 }
@@ -31,9 +53,9 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 58,
   },
-  image: {
-    width: 320,
-    height: 440,
-    borderRadius: 18,
+  footerContainer: {
+    flex: 1 / 3,
+    alignItems: 'center',
+    bottom: 40,
   },
 });
