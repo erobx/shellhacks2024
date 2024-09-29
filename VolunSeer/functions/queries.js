@@ -39,13 +39,6 @@ export const get_events_within_radius = async (lng, lat, radius) => {
     if (error) {
       throw error;
     }
-    for (let i = 0; i < data.length; i++) {
-      try {
-        data[i].latitude, data[i].longitude = location.wkbToCoords(data[i].location);
-      } catch(error) {
-        console.error("Error parsing event data: ", error)
-      }
-    }
     return data;
 
   } catch (error) {
