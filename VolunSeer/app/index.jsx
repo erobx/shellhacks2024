@@ -1,6 +1,5 @@
 import React from "react";
 import { View } from "react-native";
-import {useAuth0, Auth0Provider} from 'react-native-auth0';
 
 
 import Map from "../components/Map";

@@ -6,6 +6,15 @@ export const getUsers = async () => {
   return data;
 }
 
+export const addEvent = async (title, desc, status, type, lat, lng) => {
+  const { data, error } = await supabase.from("events").insert({ id: 200, user_id: 1, address: "", title: title, description: desc, status: status, contact: "", type: type, lat: lat, lng: lng }).select()
+  if (error) {
+    console.log("error inputting event:", error)
+    return null
+  }
+  return data;
+}
+
 export const getEvents = async () => {
   const { data, error } = await supabase.from("events").select()
   if (error) return null

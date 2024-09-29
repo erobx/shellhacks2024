@@ -3,6 +3,7 @@ import { View, TextInput, Button, StyleSheet, Image, Text, Alert, TouchableWitho
 import { useRoute } from '@react-navigation/native';
 import { useNavigation } from "@react-navigation/native";
 import { useLocation } from '../hooks/Location';
+import { addEvent } from '../functions/queries';
 
 export default function ReportDetails() {
   const { location } = useLocation();
@@ -13,17 +14,14 @@ export default function ReportDetails() {
   const [description, setDescription] = useState('');
   const [type, setType] = useState('');
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!title || !description) {
       Alert.alert('Error', 'Please fill out all fields.');
       return;
     }
 
-    console.log('Image URI:', imageUri);
-    console.log('Title:', title);
-    console.log('Description:', description);
-    console.log('Type:', type);
-    console.log('Loc:', location);
+    const data = await addEvent(title, description, "Unresolved", type, location.latitude, location.longitude)
+    console.log("returned:", data)
 
     Alert.alert('Success', 'Form submitted successfully!');
     goToMap();
