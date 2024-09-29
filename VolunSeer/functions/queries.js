@@ -27,12 +27,12 @@ export const getUserRoles = async (userId) => {
 }
 
 export const getNearbyEvents = async (lat, lon, range) => {
-  const {events, error} = await supabase
-  .rpc("events_within_radius", {
-    lat: lat,
-    lon: lon,
-    radius: radius // in some units
-  }).select("location", "type", "id", "name");
+  const { events, error } = await supabase
+    .rpc("events_within_radius", {
+      lat: lat,
+      lon: lon,
+      radius: radius // in some units
+    }).select("location", "type", "id", "name");
 }
 
 
