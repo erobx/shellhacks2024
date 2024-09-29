@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { View, Text } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import { View, Text, StyleSheet } from "react-native";
+import MapView, { Marker, Callout } from "react-native-maps";
 import * as Location from "expo-location";
 import { get_events_within_radius } from "../functions/queries";
 
@@ -76,7 +76,7 @@ export default function Map() {
           justifyContent: "center",
           alignItems: "center",
         }}>
-          <Text>Loading...</Text> // Display while loading
+          <Text>Loading...</Text>
         </View >
       ) : (
         <MapView
@@ -96,13 +96,20 @@ export default function Map() {
           showsUserLocation
         >
           {/* Display markers */}
-          {markers?.length > 0 && markers.map((point, index) => (
+          {markers?.length > 0 && markers.map((marker) => (
             <Marker
-              key={index}
-              coordinate={{ latitude: 25, longitude: -80 }}
-              title={point.title}
-              description={point.type} // Assuming 'type' describes the marker
-            />
+              key={marker.id}
+              coordinate={{ latitude: 23, longitude: -83 }}
+              title={marker.title}
+              description={marker.description}
+            >
+              <Callout>
+                <View style={styles.callout}>
+                  <Text style={styles.calloutTitle}>{marker.title}</Text>
+                  <Text>{marker.description}</Text>
+                </View>
+              </Callout>
+            </Marker>
           ))}
         </MapView>
       )
@@ -110,3 +117,16 @@ export default function Map() {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  map: {
+    flex: 1,
+  },
+  callout: {
+    width: 150,
+    padding: 10,
+  },
+  calloutTitle: {
+    fontWeight: 'bold',
+  },
+});
