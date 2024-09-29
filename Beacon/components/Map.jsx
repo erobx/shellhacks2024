@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Text } from "react-native";
+import { View, Text } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { get_events_within_radius } from "../functions/queries";
@@ -71,7 +71,13 @@ export default function Map() {
   return (
     <>
       {loading ? (
-        <Text>Loading...</Text> // Display while loading
+        <View style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}>
+          <Text>Loading...</Text> // Display while loading
+        </View >
       ) : (
         <MapView
           region={region} // Use region instead of initialRegion, to make the map responsive to changes
@@ -99,7 +105,8 @@ export default function Map() {
             />
           ))}
         </MapView>
-      )}
+      )
+      }
     </>
   );
 }
