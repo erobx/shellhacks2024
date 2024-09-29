@@ -1,4 +1,5 @@
 import supabase from "./supabaseClient";
+import * as location from "./location";
 
 // All data from a single user
 export const getUser = async (userId) => {
@@ -27,16 +28,23 @@ export const getUserRoles = async (userId) => {
 }
 
 // Attempt to retrieve events given user location and radius (in meters)
-export const get_events_within_radius = async (lon, lat, radius) => {
+export const get_events_within_radius = async (lng, lat, radius) => {
   try {
     const { data, error } = await supabase.rpc('events_within_radius', {
       lat: parseFloat(lat),
-      lon: parseFloat(lon),
+      lng: parseFloat(lng),
       radius: parseFloat(radius),
     });
 
     if (error) {
       throw error;
+    }
+    for (let i = 0; i < data.length; i++) {
+      try {
+        data[i].latitude, data[i].longitude = location.wkbToCoords(data[i].location);
+      } catch(error) {
+        console.error("Error parsing event data: ", error)
+      }
     }
     return data;
 
@@ -45,6 +53,3 @@ export const get_events_within_radius = async (lon, lat, radius) => {
     return []
   }
 }
-
-
-
