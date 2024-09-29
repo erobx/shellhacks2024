@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Image, Text, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { useNavigation } from "@react-navigation/native";
+import { useLocation } from '../hooks/Location';
 
 export default function ReportDetails() {
+  const { location } = useLocation();
   const route = useRoute();
   const navigation = useNavigation()
   const { imageUri } = route.params;
@@ -21,6 +23,7 @@ export default function ReportDetails() {
     console.log('Title:', title);
     console.log('Description:', description);
     console.log('Type:', type);
+    console.log('Loc:', location);
 
     Alert.alert('Success', 'Form submitted successfully!');
     goToMap();

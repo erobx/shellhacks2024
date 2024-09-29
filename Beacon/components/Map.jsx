@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "../hooks/Location";
 import { View, Text, StyleSheet } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import CustomCallout from "./CustomCallout";
@@ -6,11 +7,11 @@ import * as Location from "expo-location";
 import { get_events_within_radius } from "../functions/queries";
 
 export default function Map() {
+  const { setLocation } = useLocation()
   const [region, setRegion] = useState(null)
   const [errorMsg, setErrorMsg] = useState(null)
   const [loading, setLoading] = useState(true)
   const [markers, setMarkers] = useState([])
-
 
   useEffect(() => {
     onMount();
@@ -48,6 +49,7 @@ export default function Map() {
             longitudeDelta: 0.3,
           });
           console.log(loc.latitude, loc.longitude)
+          setLocation(loc);
           fetchMarkers(loc.latitude, loc.longitude);
           resolve();
         })
