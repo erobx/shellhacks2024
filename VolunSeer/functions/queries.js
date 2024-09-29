@@ -31,8 +31,8 @@ export const getUserRoles = async (userId) => {
 export const get_events_within_radius = async (lng, lat, radius) => {
   try {
     const { data, error } = await supabase.rpc('events_within_radius', {
-      lat: parseFloat(lat),
-      lng: parseFloat(lng),
+      input_lat: parseFloat(lat),
+      input_lng: parseFloat(lng),
       radius: parseFloat(radius),
     });
 
