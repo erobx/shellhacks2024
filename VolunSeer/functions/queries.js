@@ -35,6 +35,21 @@ export const getNearbyEvents = async (lat, lon, range) => {
     }).select("location", "type", "id", "name");
 }
 
+export const createEvent = async (event) => {
+  const { data, error } = await supabase.from("events").insert([event])
+  if (error) {
+    console.log("Error creating event:", error)
+    return null
+  }
+  return data
+}
 
+export const completeEvent = async (eventId) => {
+  const { data, error } = await supabase
+    .from("events")
+    .update({ status: "Completed" })
+    .eq("id", eventId)
+  return data
+}
 
 
