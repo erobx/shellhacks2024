@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import React from "react";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 
 import Map from "../components/Map";
 

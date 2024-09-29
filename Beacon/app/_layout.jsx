@@ -17,12 +17,36 @@ export default function AppLayout() {
             iconName = 'report-outline';
           }
         },
+        tabBarStyle: {
+          position: 'absolute',
+          backgroundColor: '#1E1E1E',
+          borderTopColor: 'transparent',
+          height: 70,
+          borderRadius: 10,
+          left: .1,
+          right: .1,
+          bottom: 0,
+        },
         tabBarActiveTintColor: 'tomato',
         tabBarInactiveTintColor: 'gray',
       })}
     >
-      <Tab.Screen name="index" component={Map} />
-      <Tab.Screen name="report" component={Report} />
+      <Tab.Screen name="index" component={Map} options={{
+        headerShown: false,
+        tabBarLabel: "Map",
+        tabBarLabelStyle: {
+          fontSize: 14,
+          fontWeight: 'bold',
+        }
+      }} />
+      <Tab.Screen name="report" component={Report} options={{
+        headerShown: false,
+        tabBarLabel: "Report",
+        tabBarLabelStyle: {
+          fontSize: 14,
+          fontWeight: 'bold',
+        }
+      }} />
     </Tab.Navigator>
   );
 }
