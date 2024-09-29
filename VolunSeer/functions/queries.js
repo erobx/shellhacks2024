@@ -1,30 +1,25 @@
 import supabase from "./supabaseClient";
-import * as location from "./location";
 
-// All data from a single user
-export const getUser = async (userId) => {
-  const { user, error } = await supabase.from("users").select("*").eq("id", userId).single()
-  if (error) { return null }
-  return user
+export const getUsers = async () => {
+  const { data, error } = await supabase.from("users").select()
+  if (error) return null
+  return data;
 }
 
-// Need user events
-export const getUserEvents = async (userId) => {
-  const { events, error } = await supabase
-    .from("events")
-    .select("*").eq("user_id", userId)
-  if (error) {
-    console.log("Error returning events:", error)
-    return []
+export const getEvents = async () => {
+  const { data, error } = await supabase.from("events").select()
+  if (error) return null
+  return data;
+}
+
+const allowedStatuses = ["Unresolved", "Resolved"]
+export const updateEventStatus = async (eventId, status) => {
+  if (!allowedStatuses.includes(status)) {
+    console.error("Invalid status:", status)
+    return null
   }
-  return events
-}
-
-// 
-export const getUserRoles = async (userId) => {
-  const { data, error } = await supabase.from("users_roles").select("role_id, roles (name)").eq("user_id", userId)
+  const { error } = await supabase.from("events").update({ status }).eq("id", eventId)
   if (error) { return null }
-  return data
 }
 
 // Attempt to retrieve events given user location and radius (in meters)
@@ -47,8 +42,28 @@ export const get_events_within_radius = async (lng, lat, radius) => {
   }
 }
 
+// Need user events
+export const getUserEvents = async (userId) => {
+  const { events, error } = await supabase
+    .from("events")
+    .select("*").eq("user_id", userId)
+  if (error) {
+    console.log("Error returning events:", error)
+    return []
+  }
+  return events
+}
+
+// 
+export const getUserRoles = async (userId) => {
+  const { data, error } = await supabase.from("users_roles").select("role_id, roles (name)").eq("user_id", userId)
+  if (error) { return null }
+  return data
+}
+
+
 export const getImageUrl = async (eventId) => {
-  let {data, error} = await supabase.from("events").select("image_url")
+  let { data, error } = await supabase.from("events").select("image_url")
   if (error) {
     console.log("Error getting URL:", error)
     return null
