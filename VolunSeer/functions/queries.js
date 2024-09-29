@@ -20,11 +20,23 @@ export const getUserEvents = async (userId) => {
   return events
 }
 
-// 
+
 export const getUserRoles = async (userId) => {
   const { roles, error } = await supabase.from("users_roles").select("role_id, roles (name)").eq("user_id", userId)
   if (error) { return null }
   return roles
+}
+
+const allowedStatuses = ["Unresolved", "Resolved"]
+
+export const updateEventStatus = async (eventId, status) => {
+  if (!allowedStatuses.includes(status)) {
+    console.error("Invalid status:", status)
+    return null
+  }
+  const { data, error } = await supabase.from("events").update({ status }).eq("id", eventId)
+  if (error) { return null }
+  return data
 }
 
 // Attempt to retrieve events given user location and radius (in meters)
