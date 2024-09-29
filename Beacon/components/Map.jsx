@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import MapView, { Marker, Callout } from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
+import CustomCallout from "./CustomCallout";
 import * as Location from "expo-location";
 import { get_events_within_radius } from "../functions/queries";
 
@@ -99,34 +100,25 @@ export default function Map() {
           {markers?.length > 0 && markers.map((marker) => (
             <Marker
               key={marker.id}
-              coordinate={{ latitude: 23, longitude: -83 }}
+              coordinate={{ latitude: marker.lat, longitude: marker.lng }}
               title={marker.title}
               description={marker.description}
             >
-              <Callout>
-                <View style={styles.callout}>
-                  <Text style={styles.calloutTitle}>{marker.title}</Text>
-                  <Text>{marker.description}</Text>
-                </View>
-              </Callout>
+              <CustomCallout marker={marker} />
             </Marker>
           ))}
         </MapView>
-      )
-      }
+      )}
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  map: {
-    flex: 1,
-  },
-  callout: {
-    width: 150,
-    padding: 10,
-  },
-  calloutTitle: {
-    fontWeight: 'bold',
-  },
+  marker: {
+    width: 60,
+    height: 60,
+    resizeMode: "contain",
+    borderRadius: 30,
+    borderWidth: 2,
+  }
 });

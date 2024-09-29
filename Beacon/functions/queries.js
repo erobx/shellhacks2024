@@ -13,11 +13,11 @@ export const getEvents = async () => {
 }
 
 // Attempt to retrieve events given user location and radius (in meters)
-export const get_events_within_radius = async (lon, lat, radius) => {
+export const get_events_within_radius = async (lng, lat, radius) => {
   try {
     const { data, error } = await supabase.rpc('events_within_radius', {
-      lat: parseFloat(lat),
-      lon: parseFloat(lon),
+      input_lat: parseFloat(lat),
+      input_lng: parseFloat(lng),
       radius: parseFloat(radius),
     });
 
