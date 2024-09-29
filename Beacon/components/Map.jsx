@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Text } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
-import { getNearbyEvents } from "../functions/queries";
+import { get_events_within_radius } from "../functions/queries";
 
 export default function Map() {
   const [region, setRegion] = useState(null)
@@ -10,17 +10,10 @@ export default function Map() {
   const [loading, setLoading] = useState(true)
   const [markers, setMarkers] = useState([])
 
-  let fetchMarkers = async () => {
-    console.log(region.latitude, region.longitude)
-    const data = await getNearbyEvents(region.latitude, region.longitude, 5)
-    console.log("Events:", data)
-    setMarkers(data)
-  }
 
   useEffect(() => {
     onMount();
-    fetchMarkers()
-  }, [region.latitude, region.longitude])
+  }, [])
 
   let onMount = () => {
     getLocationAsync()
@@ -53,6 +46,8 @@ export default function Map() {
             latitudeDelta: 0.2,
             longitudeDelta: 0.3,
           });
+          console.log(loc.latitude, loc.longitude)
+          fetchMarkers(loc.latitude, loc.longitude);
           resolve();
         })
         .catch((error) => {
@@ -62,13 +57,24 @@ export default function Map() {
     });
   }
 
+  const fetchMarkers = async (latitude, longitude) => {
+    try {
+      const data = await get_events_within_radius(latitude, longitude, 8000); // Fetch markers near user's location
+      console.log('Events:', data);
+      setMarkers(data); // Update markers once fetched and decoded
+    } catch (error) {
+      console.error('Error in fetchMarkers:', error);
+      setMarkers([]); // Fallback to empty array in case of error
+    }
+  };
+
   return (
     <>
       {loading ? (
-        <Text>Loading...</Text>
+        <Text>Loading...</Text> // Display while loading
       ) : (
         <MapView
-          initialRegion={region}
+          region={region} // Use region instead of initialRegion, to make the map responsive to changes
           loadingEnabled
           showsMyLocationButton
           showsCompass
@@ -78,24 +84,20 @@ export default function Map() {
             left: 0,
             bottom: 0,
             right: 0,
-            height: "100%",
+            height: '100%',
           }}
           zoomEnabled
           showsUserLocation
         >
-          {markers.map((point, index) => (
+          {/* Display markers */}
+          {markers?.length > 0 && markers.map((point, index) => (
             <Marker
               key={index}
-              coordinate={{ latitude: point.lat, longitude: point.lon }}
+              coordinate={{ latitude: 25, longitude: -80 }}
               title={point.title}
-              description={point.description}
+              description={point.type} // Assuming 'type' describes the marker
             />
           ))}
-          <Marker
-            coordinate={{ latitude: 25.758756416131575, longitude: -80.37411957068102 }}
-            title="My test"
-            description="something"
-          />
         </MapView>
       )}
     </>

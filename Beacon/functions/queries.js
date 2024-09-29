@@ -12,16 +12,22 @@ export const getEvents = async () => {
   return data;
 }
 
-export const getNearbyEvents = async (lat, lon, radius) => {
-  const { data, error } = await supabase
-    .rpc("events_within_radius", {
-      lat: lat,
-      lon: lon,
-      radius: radius // in some units
-    }).select("location", "type", "id", "name");
-  if (error) {
-    console.log("Error getting nearby events:", error)
-    return null
+// Attempt to retrieve events given user location and radius (in meters)
+export const get_events_within_radius = async (lon, lat, radius) => {
+  try {
+    const { data, error } = await supabase.rpc('events_within_radius', {
+      lat: parseFloat(lat),
+      lon: parseFloat(lon),
+      radius: parseFloat(radius),
+    });
+
+    if (error) {
+      throw error;
+    }
+    return data;
+
+  } catch (error) {
+    console.error("Error fetching events in radius: ", error)
+    return []
   }
-  return data
 }
