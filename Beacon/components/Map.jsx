@@ -5,6 +5,7 @@ import MapView, { Marker } from "react-native-maps";
 import CustomCallout from "./CustomCallout";
 import * as Location from "expo-location";
 import { get_events_within_radius } from "../functions/queries";
+import { updateEventStatus } from "../functions/queries";
 
 export default function Map() {
   const { setLocation } = useLocation()
@@ -12,6 +13,7 @@ export default function Map() {
   const [errorMsg, setErrorMsg] = useState(null)
   const [loading, setLoading] = useState(true)
   const [markers, setMarkers] = useState([])
+  const [visible, setVisible] = useState(true)
 
   useEffect(() => {
     onMount();
@@ -71,6 +73,13 @@ export default function Map() {
     }
   };
 
+  const handleComplete = async (eventId) => {
+    const data = await updateEventStatus(eventId, "Resolved")
+    if (data) {
+      setMarkers((prevMarkers) => prevMarkers.filter((marker) => marker.id !== eventId));
+    }
+  }
+
   return (
     <>
       {loading ? (
@@ -106,7 +115,7 @@ export default function Map() {
               title={marker.title}
               description={marker.description}
             >
-              <CustomCallout marker={marker} />
+              <CustomCallout marker={marker} onComplete={() => handleComplete(marker.id)} />
             </Marker>
           ))}
         </MapView>

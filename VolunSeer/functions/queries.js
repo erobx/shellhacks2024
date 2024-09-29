@@ -22,9 +22,9 @@ export const getUserEvents = async (userId) => {
 
 // 
 export const getUserRoles = async (userId) => {
-  const { roles, error } = await supabase.from("users_roles").select("role_id, roles (name)").eq("user_id", userId)
+  const { data, error } = await supabase.from("users_roles").select("role_id, roles (name)").eq("user_id", userId)
   if (error) { return null }
-  return roles
+  return data
 }
 
 // Attempt to retrieve events given user location and radius (in meters)

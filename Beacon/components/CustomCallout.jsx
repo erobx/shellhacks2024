@@ -1,10 +1,16 @@
 import React from "react";
-import { View, StyleSheet, Dimensions, Image, Text } from "react-native";
+import { Button, View, StyleSheet, Dimensions, Image, Text } from "react-native";
 import { Callout } from "react-native-maps";
+import { updateEventStatus } from "../functions/queries";
 
 const screenWidth = Dimensions.get("window").width;
 
 const CustomCallout = ({ marker }) => {
+  const handleComplete = async () => {
+    console.log("Completing event with id:", marker.id);
+    await updateEventStatus(marker.id, "Resolved");
+  };
+
   return (
     <Callout tooltip>
       <View>
@@ -27,6 +33,9 @@ const CustomCallout = ({ marker }) => {
             </Text>
             <Text>{marker.description}</Text>
             <Text>{marker.type}</Text>
+            <Text>{marker.address}</Text>
+            <Text>{marker.contact}</Text>
+            <Button title="Complete" onPress={handleComplete} />
           </View>
         </View>
         <View style={styles.triangle}></View>
