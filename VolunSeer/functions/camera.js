@@ -1,6 +1,3 @@
-import * as ImagePicker from 'expo-image-picker';
-
-
 //Function to get camera permissions so that user may add image to database
 //ImagePicker.getCameraPermissionsAsync()
 //ImagePicker.launchCameraAsync()
@@ -11,8 +8,10 @@ import * as ImagePicker from 'expo-image-picker';
 
 // App.js
 import React, { useState } from 'react';
-import { View, Button, Image, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+
+const { View, Button, Image, Alert } = require('react-native');
+
 
 export default function App() {
   const [image, setImage] = useState(null);
