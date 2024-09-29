@@ -1,4 +1,5 @@
-const gmaps_key = process.env.GOOGLE_MAPS_API_KEY
+const wkx = require('wkx');
+const gmaps_key = process.env.GOOGLE_MAPS_API_KEY;
 
 // Function to get address from latitude and longitude using Google Maps API
 async function getAddressFromCoordinates(lat, lon) {
@@ -59,15 +60,14 @@ function kmToMiles(km) {
     const miles = km / 1.60934;
     return miles;
 }
-  
-// Example usage
-/*
-(async () => {
-    try {
-        console.log(gmaps_key);
-        const address = await getAddressFromCoordinates(37.7749, -122.4194);
-        console.log(address);
-    } catch (error) {
-        console.error(error);
-    }
-})();*/
+
+function wkbToCoords(wkb) {
+    wkb = Buffer.from(wkb, 'hex');
+    const geometry = wkx.Geometry.parse(wkb);
+
+    // Extract the latitude and longitude
+    const longitude = geometry.x;
+    const latitude = geometry.y;
+
+    return {latitude, longitude}
+}
