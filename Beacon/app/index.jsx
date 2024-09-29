@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Map from "../components/Map";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { getEvents, getUsers } from "../functions/queries";
 
 export default function Index() {

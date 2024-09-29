@@ -2,15 +2,25 @@ import { useState, useEffect } from "react";
 import { Text } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
+import { getNearbyEvents } from "../functions/queries";
 
 export default function Map() {
   const [region, setRegion] = useState(null)
   const [errorMsg, setErrorMsg] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [markers, setMarkers] = useState([])
+
+  let fetchMarkers = async () => {
+    console.log(region.latitude, region.longitude)
+    const data = await getNearbyEvents(region.latitude, region.longitude, 5)
+    console.log("Events:", data)
+    setMarkers(data)
+  }
 
   useEffect(() => {
     onMount();
-  }, [])
+    fetchMarkers()
+  }, [region.latitude, region.longitude])
 
   let onMount = () => {
     getLocationAsync()
@@ -58,7 +68,6 @@ export default function Map() {
         <Text>Loading...</Text>
       ) : (
         <MapView
-          ref={(ref) => (mapView = ref)}
           initialRegion={region}
           loadingEnabled
           showsMyLocationButton
@@ -74,9 +83,18 @@ export default function Map() {
           zoomEnabled
           showsUserLocation
         >
+          {markers.map((point, index) => (
+            <Marker
+              key={index}
+              coordinate={{ latitude: point.lat, longitude: point.lon }}
+              title={point.title}
+              description={point.description}
+            />
+          ))}
           <Marker
-
-
+            coordinate={{ latitude: 25.758756416131575, longitude: -80.37411957068102 }}
+            title="My test"
+            description="something"
           />
         </MapView>
       )}
