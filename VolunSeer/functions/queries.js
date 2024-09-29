@@ -46,3 +46,56 @@ export const get_events_within_radius = async (lng, lat, radius) => {
     return []
   }
 }
+
+export const getImageUrl = async (eventId) => {
+  let {data, error} = await supabase.from("events").select("image_url")
+  if (error) {
+    console.log("Error getting URL:", error)
+    return null
+  }
+  /*
+  { data, error } = await supabase.storage.from("images").download(data.image_url)
+  if (error) {
+    console.log("Error getting URL:", error)
+    return null
+  }*/
+  return data.length > 0 ? data[0].image_url : null;
+}
+
+export const uploadImage = async (file) => {
+  const { data, error } = await supabase.storage
+    .from('images') // Replace with your bucket name
+    .upload(`images/${file.name}`, file);
+
+  if (error) {
+    console.error('Error uploading image:', error);
+    return null;
+  }
+
+  // Get the public URL of the uploaded image
+  const url = `${supabase.storage.from('images').getPublicUrl(data.path).publicUrl}`;
+  return url;
+};
+
+
+export const saveImageUrl = async (eventId) => {
+  const { data, error } = await supabase
+    .from('images')
+    .update({ image_url }).eq("id", eventId);
+
+  if (error) {
+    console.error('Error saving image URL:', error);
+    return null;
+  }
+
+  return data;
+};
+
+export const uploadAndSaveImage = async (file, eventId) => {
+  const imageUrl = await uploadImage(file);
+  if (imageUrl) {
+    const result = await saveImageUrl(userId, imageUrl);
+    return result;
+  }
+  return null;
+};
