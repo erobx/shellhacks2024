@@ -1,23 +1,59 @@
 import { useEffect, useState } from 'react';
-import { getUserNames } from '../../functions/userQueries';
+import { ActivityIndicator, Text, View } from 'react-native';
+import { getUserEvents } from '../../functions/queries';
 
 export default function HomeScreen() {
-  const [names, setNames] = useState([]);
+  const [isLoading, setLoading] = useState(true);
+  const [userId, setUserId] = useState(0);
+  const [userEvents, setUserEvents] = useState([]);
 
   useEffect(() => {
-    const fetchNames = async () => {
-      setNames(await getUserNames())
+    const fetchUser = async () => {
+      setUserId(1);
     }
-    fetchNames();
-  }, []);
+    fetchUser();
+  }, [])
+
+  useEffect(() => {
+    let isMounted = true
+    const fetchUserEvents = async () => {
+      if (userId) {
+        setLoading(true)
+        const events = await getUserEvents(userId);
+        console.log("Events:", events)
+        if (isMounted) {
+          setUserEvents(events || []);
+          setLoading(false)
+        }
+      }
+    }
+    fetchUserEvents();
+
+    return () => {
+      isMounted = false;
+    }
+  }, [userId]);
+
+  if (isLoading) {
+    return (
+      <>
+        <View>
+          <ActivityIndicator size="large" color="#0000ff" />
+          <Text>Loading events...</Text>
+        </View>
+      </>
+    )
+  };
 
   return (
     <>
-      <ul>
-        {names.map((name) => (
-          <li>{name.name}</li>
-        ))}
-      </ul>
+      {userEvents.length > 0 ? (
+        userEvents.map(event => (
+          <Text key={event.id}>{event.title}</Text>
+        ))
+      ) : (
+        <Text>No events available</Text>
+      )}
     </>
   );
 }
