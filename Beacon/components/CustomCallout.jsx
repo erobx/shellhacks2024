@@ -1,6 +1,7 @@
 import React from "react";
-import { View, StyleSheet, Dimensions, Image, Text } from "react-native";
+import { Button, View, StyleSheet, Dimensions, Image, Text } from "react-native";
 import { Callout } from "react-native-maps";
+import { updateEventStatus } from "../functions/queries";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -18,9 +19,14 @@ const CustomCallout = ({ marker }) => {
     'Provide Shelter': require('../assets/images/markers/provide_shelter.png'),
     'Misc': require('../assets/images/markers/misc.png'),
   };
+  const handleComplete = async () => {
+    console.log("Completing event with id:", marker.id);
+    await updateEventStatus(marker.id, "Resolved");
+  };
+
   return (
     <View>
-        <Image source={markerImages[marker.type]} style={{ width: 60, height: 60, resizeMode: "contain"}} />
+      <Image source={markerImages[marker.type]} style={{ width: 60, height: 60, resizeMode: "contain" }} />
       <Callout tooltip>
         <View>
           <View style={styles.container}>
@@ -42,9 +48,12 @@ const CustomCallout = ({ marker }) => {
               </Text>
               <Text>{marker.description}</Text>
               <Text>{marker.type}</Text>
+              <Text>{marker.address}</Text>
+              <Text>{marker.contact}</Text>
+              <Button title="Complete" onPress={handleComplete} />
             </View>
+            <View style={styles.triangle}></View>
           </View>
-          <View style={styles.triangle}></View>
         </View>
       </Callout>
     </View>

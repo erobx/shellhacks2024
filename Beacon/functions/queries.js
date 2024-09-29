@@ -12,6 +12,16 @@ export const getEvents = async () => {
   return data;
 }
 
+const allowedStatuses = ["Unresolved", "Resolved"]
+export const updateEventStatus = async (eventId, status) => {
+  if (!allowedStatuses.includes(status)) {
+    console.error("Invalid status:", status)
+    return null
+  }
+  const { error } = await supabase.from("events").update({ status }).eq("id", eventId)
+  if (error) { return null }
+}
+
 // Attempt to retrieve events given user location and radius (in meters)
 export const get_events_within_radius = async (lng, lat, radius) => {
   try {
