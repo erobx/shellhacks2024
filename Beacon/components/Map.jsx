@@ -59,12 +59,12 @@ export default function Map() {
 
   const fetchMarkers = async (latitude, longitude) => {
     try {
-      const data = await get_events_within_radius(latitude, longitude, 8000); // Fetch markers near user's location
+      const data = await get_events_within_radius(latitude, longitude, 8000);
       console.log('Events:', data);
-      setMarkers(data); // Update markers once fetched and decoded
+      setMarkers(data);
     } catch (error) {
       console.error('Error in fetchMarkers:', error);
-      setMarkers([]); // Fallback to empty array in case of error
+      setMarkers([]);
     }
   };
 

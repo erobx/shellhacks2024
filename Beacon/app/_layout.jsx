@@ -1,9 +1,28 @@
-import { Stack } from "expo-router";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Map from "../components/Map";
+import Report from "../components/Report";
 
-export default function RootLayout() {
+const Tab = createBottomTabNavigator()
+
+export default function AppLayout() {
   return (
-    <Stack>
-      <Stack.Screen name="index" />
-    </Stack>
+    <Tab.Navigator
+      independent={true}
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ color, size }) => {
+          let iconName;
+          if (route.name === 'index') {
+            iconName = 'map-outline';
+          } else if (route.name === 'report') {
+            iconName = 'report-outline';
+          }
+        },
+        tabBarActiveTintColor: 'tomato',
+        tabBarInactiveTintColor: 'gray',
+      })}
+    >
+      <Tab.Screen name="index" component={Map} />
+      <Tab.Screen name="report" component={Report} />
+    </Tab.Navigator>
   );
 }

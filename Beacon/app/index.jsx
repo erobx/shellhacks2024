@@ -1,7 +1,12 @@
-import Map from "../components/Map";
-import { View } from "react-native";
+import { useRouter } from "expo-router";
+import React from "react";
+import { View, Text } from "react-native";
 
-export default function Index() {
+import Map from "../components/Map";
+
+export default function Home() {
+  const router = useRouter()
+
   return (
     <View
       style={{
